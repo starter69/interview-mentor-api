@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { CreateTeamDto } from './dto/create-team.dto'
 import { UpdateTeamDto } from './dto/update-team.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
-// import { Prisma } from '@prisma/client'
 
 @Injectable()
 export class TeamsService {
