@@ -22,10 +22,6 @@ export class InterviewsController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createInterviewDto: CreateInterviewDto
   ) {
-    const video = await this.interviewService.createInterview(
-      createInterviewDto,
-      file.path
-    )
-    console.log(video)
+    await this.interviewService.createInterview(createInterviewDto, file.path)
   }
 }
