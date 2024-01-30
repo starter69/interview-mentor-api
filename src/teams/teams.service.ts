@@ -34,8 +34,8 @@ export class TeamsService {
     return updatedTeam
   }
 
-  remove(id: number) {
-    this.prisma.teams.delete({
+  async remove(id: number) {
+    await this.prisma.teams.delete({
       where: { id },
     })
   }
