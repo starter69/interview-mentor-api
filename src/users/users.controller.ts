@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -22,8 +24,19 @@ export class UsersController {
 
   @Roles('ADMIN')
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto)
+  async create(@Body() createUserDto: CreateUserDto) {
+    try {
+      const res = await this.usersService.create(createUserDto)
+      return res
+    } catch (error) {
+      throw new HttpException(
+        { status: HttpStatus.CONFLICT, error: 'Username already exists.' },
+        HttpStatus.CONFLICT,
+        {
+          cause: error,
+        }
+      )
+    }
   }
 
   @Roles('ADMIN')
