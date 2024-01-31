@@ -33,9 +33,6 @@ CREATE TABLE "users" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "interviews_user_id_key" ON "interviews"("user_id");
-
--- CreateIndex
 CREATE UNIQUE INDEX "teams_name_key" ON "teams"("name");
 
 -- CreateIndex

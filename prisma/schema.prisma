@@ -5,7 +5,7 @@ datasource db {
 
 model interviews {
   id       Int      @id @default(autoincrement())
-  user_id  Int      @unique
+  user_id  Int
   name     String
   date     DateTime
   duration Int
