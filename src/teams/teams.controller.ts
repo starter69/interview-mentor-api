@@ -7,11 +7,13 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common'
+import { JwtGuard } from 'src/auth/guard/jwt.guard'
 import { TeamsService } from './teams.service'
 import { CreateTeamDto } from './dto/create-team.dto'
 import { UpdateTeamDto } from './dto/update-team.dto'
-import { JwtGuard } from 'src/auth/guard/jwt.guard'
 
 @UseGuards(JwtGuard)
 @Controller('teams')
@@ -19,8 +21,17 @@ export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
   @Post()
-  create(@Body() createTeamDto: CreateTeamDto) {
-    return this.teamsService.create(createTeamDto)
+  async create(@Body() createTeamDto: CreateTeamDto) {
+    try {
+      const res = await this.teamsService.create(createTeamDto)
+      return res;
+    } catch (error) {
+      throw new HttpException({status: HttpStatus.CONFLICT,
+      error: 'Team name already exists.'}, HttpStatus.CONFLICT, {
+        cause: error
+      })
+    }
+    
   }
 
   @Get()
