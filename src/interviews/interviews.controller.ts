@@ -38,7 +38,7 @@ export class InterviewsController {
       })
     })
     //@ts-ignore
-    createInterviewDto.duration = metadata.format.duration * 60
+    createInterviewDto.duration = metadata.format.duration
     await this.interviewService.createInterview(createInterviewDto, file.path)
   }
 }
