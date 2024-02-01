@@ -7,13 +7,15 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common'
-import { TeamsService } from './teams.service'
-import { CreateTeamDto } from './dto/create-team.dto'
-import { UpdateTeamDto } from './dto/update-team.dto'
 import { JwtGuard } from 'src/auth/guard/jwt.guard'
 import { RolesGuard } from 'src/auth/guard/roles.guard'
 import { Roles } from 'src/auth/decorator/roles.decorator'
+import { TeamsService } from './teams.service'
+import { CreateTeamDto } from './dto/create-team.dto'
+import { UpdateTeamDto } from './dto/update-team.dto'
 
 @UseGuards(JwtGuard, RolesGuard)
 @Controller('teams')
@@ -22,8 +24,17 @@ export class TeamsController {
 
   @Roles('ADMIN')
   @Post()
-  create(@Body() createTeamDto: CreateTeamDto) {
-    return this.teamsService.create(createTeamDto)
+  async create(@Body() createTeamDto: CreateTeamDto) {
+    try {
+      const res = await this.teamsService.create(createTeamDto)
+      return res;
+    } catch (error) {
+      throw new HttpException({status: HttpStatus.CONFLICT,
+      error: 'Team name already exists.'}, HttpStatus.CONFLICT, {
+        cause: error
+      })
+    }
+    
   }
 
   @Roles('ADMIN')
