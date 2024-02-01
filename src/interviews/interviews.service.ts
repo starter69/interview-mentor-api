@@ -12,10 +12,10 @@ export class InterviewsService {
   ) {
     return this.prisma.interviews.create({
       data: {
-        user_id: createInterviewDto.user_id,
+        user_id: Number(createInterviewDto.user_id),
         name: createInterviewDto.name,
         date: new Date(),
-        duration: createInterviewDto.duration,
+        duration: Number(createInterviewDto.duration),
         path: location,
       },
     })
