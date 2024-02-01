@@ -18,13 +18,11 @@ export class InterviewsController {
 
   @Post('upload')
   @UseGuards(JwtGuard)
-  @UseInterceptors(FileInterceptor('file', multerConfig('')))
+  @UseInterceptors(FileInterceptor('file', multerConfig))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Body() createInterviewDto: CreateInterviewDto
   ) {
-    const multerConfigWithParams = multerConfig(createInterviewDto.name)
-    UseInterceptors(FileInterceptor('file', multerConfigWithParams))
     await this.interviewService.createInterview(createInterviewDto, file.path)
   }
 }

@@ -1,15 +1,19 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { diskStorage } from 'multer'
 import { extname } from 'path'
+import { getDate } from './getDate'
 
-export const multerConfig = (name: string) => ({
+export const multerConfig = {
   storage: diskStorage({
     destination: './interviews',
     filename: (req, file, cb) => {
       // @ts-ignore
       const username = req.user.name
-      console.log(username, name)
-      return cb(null, `${username}_${name}_${extname(file.originalname)}`)
+      const date = getDate()
+      return cb(
+        null,
+        `${username}_${req.body.name}_${date}${extname(file.originalname)}`
+      )
     },
   }),
   fileFilter: (req, file, cb) => {
@@ -25,4 +29,4 @@ export const multerConfig = (name: string) => ({
       )
     }
   },
-})
+}
