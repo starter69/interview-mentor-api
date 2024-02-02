@@ -22,7 +22,19 @@ export class UsersService {
   }
 
   findAll() {
-    return this.prisma.users.findMany()
+    return this.prisma.users.findMany({
+      select: {
+        id: true,
+        name: true,
+        role: true,
+        team_id: true,
+        team: {
+          select: {
+            name: true
+          }
+        }
+      }
+    })
   }
 
   findOne(id: number) {
