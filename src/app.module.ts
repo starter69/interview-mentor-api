@@ -14,8 +14,11 @@ import { InterviewsModule } from './interviews/interviews.module'
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'interviews'),
-      serveRoot: '/interviews',
+      rootPath: join(__dirname, '..', '..', 'materials'),
+      serveRoot: '/materials',
+      serveStaticOptions: {
+        index: false,
+      },
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,

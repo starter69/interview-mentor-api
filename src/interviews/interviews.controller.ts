@@ -45,7 +45,7 @@ export class InterviewsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.interviewService.findOne(+id)
+  async findOne(@Param('id') id: string) {
+    return await this.interviewService.findOne(+id)
   }
 }
