@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common'
 import { MulterModule } from '@nestjs/platform-express'
 import { InterviewsController } from './interviews.controller'
-import { InterviewsService } from './interviews.service';
+import { InterviewsService } from './interviews.service'
 
 @Module({
   imports: [
     MulterModule.register({
-      dest: './interviews',
+      dest: './materials',
     }),
   ],
   controllers: [InterviewsController],

@@ -20,4 +20,10 @@ export class InterviewsService {
       },
     })
   }
+
+  findOne(id: number) {
+    return this.prisma.interviews.findUnique({
+      where: { id },
+    })
+  }
 }
