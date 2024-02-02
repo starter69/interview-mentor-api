@@ -17,7 +17,7 @@ export const multerConfig = {
     },
   }),
   fileFilter: (req, file, cb) => {
-    const allowedExtensions = ['.wmv', '.api', '.mp4'] // Add your allowed extensions here
+    const allowedExtensions = ['.wmv', '.avi', '.mp4'] // Add your allowed extensions here
 
     const fileExt = extname(file.originalname)
     if (allowedExtensions.includes(fileExt)) {

@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
   UploadedFile,
   UseGuards,
@@ -40,5 +42,10 @@ export class InterviewsController {
     //@ts-ignore
     createInterviewDto.duration = metadata.format.duration
     await this.interviewService.createInterview(createInterviewDto, file.path)
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.interviewService.findOne(+id)
   }
 }

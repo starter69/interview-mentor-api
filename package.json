@@ -30,6 +30,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.1",
+    "@nestjs/serve-static": "^4.0.0",
     "@prisma/client": "^5.8.1",
     "@types/cors": "^2.8.17",
     "@types/ffprobe-static": "^2.0.3",
