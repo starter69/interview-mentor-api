@@ -26,8 +26,14 @@ export class InterviewsService {
     return this.prisma.interviews.findMany()
   }
 
-  findByUserId(userId:number) {
-    return this.prisma.interviews.findMany({
+  async findOne(id: number) {
+    return await this.prisma.interviews.findUnique({
+      where: { id }
+    })
+  }
+
+  async findByUserId(userId:number) {
+    return await this.prisma.interviews.findMany({
       where: {
         user_id: userId
       }

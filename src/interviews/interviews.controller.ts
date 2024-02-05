@@ -48,10 +48,15 @@ export class InterviewsController {
   }
 
   @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return await this.interviewService.findOne(+id)
+  }
+
+  @Get('user/:id')
   async findByUserId(@Param('id') id: string) {
     return await this.interviewService.findByUserId(+id)
   }
-
+  
   @Get()
   findAll() {
     return this.interviewService.findAll()
