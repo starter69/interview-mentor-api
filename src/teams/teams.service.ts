@@ -17,7 +17,11 @@ export class TeamsService {
   }
 
   findAll() {
-    return this.prisma.teams.findMany()
+    return this.prisma.teams.findMany({
+      orderBy: {
+        id: 'asc' // or 'desc' for descending order
+      }
+    })
   }
 
   findOne(id: number) {

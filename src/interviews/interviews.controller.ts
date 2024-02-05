@@ -2,19 +2,22 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
+  Delete,
+  Patch,
+  Param,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { InterviewsService } from './interviews.service'
 import { JwtGuard } from 'src/auth/guard/jwt.guard'
-import { CreateInterviewDto } from './dto/create-interview.dto'
 import { multerConfig } from 'src/utils/multer.config'
 import * as ffmpeg from 'fluent-ffmpeg'
 import * as ffprobeStatic from 'ffprobe-static'
+import { InterviewsService } from './interviews.service'
+import { CreateInterviewDto } from './dto/create-interview.dto'
+import { UpdateInterviewDto } from './dto/update-interview.dto'
 
 @Controller('interviews')
 export class InterviewsController {
@@ -47,5 +50,25 @@ export class InterviewsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.interviewService.findOne(+id)
+  }
+
+  @Get('user/:id')
+  async findByUserId(@Param('id') id: string) {
+    return await this.interviewService.findByUserId(+id)
+  }
+  
+  @Get()
+  findAll() {
+    return this.interviewService.findAll()
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateInterviewDto: UpdateInterviewDto) {
+    return this.interviewService.update(+id, updateInterviewDto)
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.interviewService.remove(+id)
   }
 }

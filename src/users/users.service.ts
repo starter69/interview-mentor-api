@@ -14,8 +14,8 @@ export class UsersService {
       data: {
         name: createUserDto.name,
         password: await argon.hash('12345678'),
-        team_id: createUserDto.team_id > 0 ? createUserDto.team_id : null,
-        role: createUserDto.team_id === 0 ? Role.ADMIN : Role.USER,
+        team_id: createUserDto.team_id >= 0 ? createUserDto.team_id : null,
+        role: createUserDto.role === 'ADMIN' ? Role.ADMIN : createUserDto.role === 'LEAD' ? Role.LEAD : Role.USER
       },
     })
     return createdUser
@@ -33,6 +33,9 @@ export class UsersService {
             name: true
           }
         }
+      },
+      orderBy: {
+        id: 'asc' // or 'desc' for descending order
       }
     })
   }
