@@ -10,6 +10,7 @@ model interviews {
   date     DateTime
   duration Int
   path     String
+  user      users   @relation(fields: [user_id], references: [id])
 }
 
 model teams {
@@ -25,6 +26,7 @@ model users {
   team     teams?  @relation(fields: [team_id], references: [id])
   team_id  Int?
   role     Role
+  interviews interviews[]
 }
 
 enum Role {

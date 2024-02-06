@@ -39,4 +39,7 @@ CREATE UNIQUE INDEX "teams_name_key" ON "teams"("name");
 CREATE UNIQUE INDEX "users_name_key" ON "users"("name");
 
 -- AddForeignKey
+ALTER TABLE "interviews" ADD CONSTRAINT "interviews_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "teams"("id") ON DELETE SET NULL ON UPDATE CASCADE;

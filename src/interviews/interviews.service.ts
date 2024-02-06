@@ -28,15 +28,15 @@ export class InterviewsService {
 
   async findOne(id: number) {
     return await this.prisma.interviews.findUnique({
-      where: { id }
+      where: { id },
     })
   }
 
-  async findByUserId(userId:number) {
+  async findByUserId(userId: number) {
     return await this.prisma.interviews.findMany({
       where: {
-        user_id: userId
-      }
+        user_id: userId,
+      },
     })
   }
 
@@ -50,7 +50,25 @@ export class InterviewsService {
 
   async remove(id: number) {
     await this.prisma.interviews.delete({
-      where: {id},
+      where: { id },
     })
+  }
+
+  async search(query: string) {
+    const result = await this.prisma.interviews.findMany({
+      where: {
+        OR: [
+          {
+            name: { contains: query, mode: 'insensitive' },
+          },
+          {
+            user: {
+              name: { contains: query, mode: 'insensitive' },
+            },
+          },
+        ],
+      },
+    })
+    return result
   }
 }
