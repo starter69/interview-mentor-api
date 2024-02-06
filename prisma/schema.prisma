@@ -5,12 +5,12 @@ datasource db {
 
 model interviews {
   id       Int      @id @default(autoincrement())
-  user_id  Int
+  user     users?   @relation(fields: [user_id], references: [id])
+  user_id  Int?
   name     String
   date     DateTime
   duration Int
   path     String
-  user      users   @relation(fields: [user_id], references: [id])
 }
 
 model teams {

@@ -23,12 +23,27 @@ export class InterviewsService {
   }
 
   findAll() {
-    return this.prisma.interviews.findMany()
+    return this.prisma.interviews.findMany({
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    })
   }
 
   async findOne(id: number) {
     return await this.prisma.interviews.findUnique({
       where: { id },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
     })
   }
 
@@ -36,6 +51,13 @@ export class InterviewsService {
     return await this.prisma.interviews.findMany({
       where: {
         user_id: userId,
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
       },
     })
   }
@@ -67,6 +89,9 @@ export class InterviewsService {
             },
           },
         ],
+      },
+      include: {
+        user: true,
       },
     })
     return result
