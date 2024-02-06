@@ -9,10 +9,12 @@ import {
   UseGuards,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { UpdatePasswordDto } from './dto/update-password.dto'
 import { JwtGuard } from 'src/auth/guard/jwt.guard'
 import { RolesGuard } from 'src/auth/guard/roles.guard'
 import { Roles } from 'src/auth/decorator/roles.decorator'
@@ -60,5 +62,10 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id)
+  }
+
+  @Put('update-password')
+  async updatePassword(@Body() data: UpdatePasswordDto) {
+    return await this.usersService.updatePassword(data)
   }
 }
