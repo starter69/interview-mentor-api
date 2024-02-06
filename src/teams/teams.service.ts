@@ -19,7 +19,7 @@ export class TeamsService {
   findAll() {
     return this.prisma.teams.findMany({
       orderBy: {
-        id: 'asc' // or 'desc' for descending order
+        name: 'asc' // or 'desc' for descending order
       }
     })
   }
