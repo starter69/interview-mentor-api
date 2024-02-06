@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types'
-import { CreateInterviewDto } from './create-interview.dto'
+import { IsNotEmpty, IsString } from 'class-validator'
 
-export class UpdateInterviewDto extends PartialType(CreateInterviewDto) {}
+export class UpdateInterviewDto {
+  @IsString()
+  @IsNotEmpty()
+  company_name: string
+}

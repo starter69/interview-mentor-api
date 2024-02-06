@@ -65,7 +65,7 @@ export class InterviewsService {
   async update(id: number, updateInterviewDto: UpdateInterviewDto) {
     const updatedInterview = await this.prisma.interviews.update({
       where: { id },
-      data: UpdateInterviewDto,
+      data: { name: updateInterviewDto.company_name },
     })
     return updatedInterview
   }
