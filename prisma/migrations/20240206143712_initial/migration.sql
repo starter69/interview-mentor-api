@@ -4,7 +4,7 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'LEAD', 'USER');
 -- CreateTable
 CREATE TABLE "interviews" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
+    "user_id" INTEGER,
     "name" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "duration" INTEGER NOT NULL,
@@ -37,6 +37,9 @@ CREATE UNIQUE INDEX "teams_name_key" ON "teams"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_name_key" ON "users"("name");
+
+-- AddForeignKey
+ALTER TABLE "interviews" ADD CONSTRAINT "interviews_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "teams"("id") ON DELETE SET NULL ON UPDATE CASCADE;

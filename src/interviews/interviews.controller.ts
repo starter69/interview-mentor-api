@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Query,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { JwtGuard } from 'src/auth/guard/jwt.guard'
@@ -47,23 +48,31 @@ export class InterviewsController {
     await this.interviewService.createInterview(createInterviewDto, file.path)
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.interviewService.findOne(+id)
+  @Get('search')
+  async searchInterview(@Query('query') query: string) {
+    return await this.interviewService.search(query)
   }
 
   @Get('user/:id')
   async findByUserId(@Param('id') id: string) {
     return await this.interviewService.findByUserId(+id)
   }
-  
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return await this.interviewService.findOne(+id)
+  }
+
   @Get()
   findAll() {
     return this.interviewService.findAll()
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateInterviewDto: UpdateInterviewDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateInterviewDto: UpdateInterviewDto
+  ) {
     return this.interviewService.update(+id, updateInterviewDto)
   }
 
