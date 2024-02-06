@@ -5,7 +5,8 @@ datasource db {
 
 model interviews {
   id       Int      @id @default(autoincrement())
-  user_id  Int
+  user     users?   @relation(fields: [user_id], references: [id])
+  user_id  Int?
   name     String
   date     DateTime
   duration Int
@@ -25,6 +26,7 @@ model users {
   team     teams?  @relation(fields: [team_id], references: [id])
   team_id  Int?
   role     Role
+  interviews interviews[]
 }
 
 enum Role {
