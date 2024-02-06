@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { Role } from '@prisma/client'
 import * as argon from 'argon2'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { UpdatePasswordDto } from './dto/update-password.dto'
 
 @Injectable()
 export class UsersService {
@@ -15,7 +16,12 @@ export class UsersService {
         name: createUserDto.name,
         password: await argon.hash('12345678'),
         team_id: createUserDto.team_id >= 0 ? createUserDto.team_id : null,
-        role: createUserDto.role === 'ADMIN' ? Role.ADMIN : createUserDto.role === 'LEAD' ? Role.LEAD : Role.USER
+        role:
+          createUserDto.role === 'ADMIN'
+            ? Role.ADMIN
+            : createUserDto.role === 'LEAD'
+              ? Role.LEAD
+              : Role.USER,
       },
     })
     return createdUser
@@ -30,13 +36,13 @@ export class UsersService {
         team_id: true,
         team: {
           select: {
-            name: true
-          }
-        }
+            name: true,
+          },
+        },
       },
       orderBy: {
-        id: 'asc' // or 'desc' for descending order
-      }
+        id: 'asc', // or 'desc' for descending order
+      },
     })
   }
 
@@ -66,5 +72,21 @@ export class UsersService {
     await this.prisma.users.delete({
       where: { id },
     })
+  }
+
+  async updatePassword(data: UpdatePasswordDto) {
+    const user = await this.prisma.users.findUnique({
+      where: { id: data.user_id },
+    })
+    if (await argon.verify(user.password, data.old_password))
+      await this.prisma.users.update({
+        where: { id: data.user_id },
+        data: {
+          password: await argon.hash(data.new_password),
+        },
+      })
+    else {
+      throw new BadRequestException('Current password is incorrect.')
+    }
   }
 }
