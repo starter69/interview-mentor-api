@@ -41,7 +41,9 @@ export class UsersService {
         },
       },
       orderBy: {
-        team_id: 'asc' // or 'desc' for descending order
+        team: {
+          name: 'asc'
+        }
       }
     })
   }
