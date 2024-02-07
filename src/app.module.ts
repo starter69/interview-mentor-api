@@ -13,13 +13,22 @@ import { InterviewsModule } from './interviews/interviews.module'
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'materials'),
-      serveRoot: '/materials',
-      serveStaticOptions: {
-        index: false,
+    ServeStaticModule.forRoot(
+      {
+        rootPath: join(__dirname, '..', '..', 'materials'),
+        serveRoot: '/materials',
+        serveStaticOptions: {
+          index: false,
+        },
       },
-    }),
+      {
+        rootPath: join(__dirname, '..', '..', 'materials', 'thumbnails'),
+        serveRoot: '/thumbnails',
+        serveStaticOptions: {
+          index: false,
+        },
+      }
+    ),
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     PrismaModule,
