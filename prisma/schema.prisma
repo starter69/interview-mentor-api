@@ -11,6 +11,7 @@ model interviews {
   date     DateTime
   duration Int
   path     String
+  thumbnail_path String
 }
 
 model teams {

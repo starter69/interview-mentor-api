@@ -9,7 +9,8 @@ export class InterviewsService {
 
   async createInterview(
     createInterviewDto: CreateInterviewDto,
-    location: string
+    location: string,
+    thumbnail_location: string
   ) {
     return this.prisma.interviews.create({
       data: {
@@ -18,6 +19,7 @@ export class InterviewsService {
         date: new Date(),
         duration: Number(createInterviewDto.duration),
         path: location,
+        thumbnail_path: thumbnail_location,
       },
     })
   }
