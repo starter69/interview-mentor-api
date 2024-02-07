@@ -11,13 +11,13 @@ import {
   HttpStatus,
   Put,
 } from '@nestjs/common'
+import { JwtGuard } from 'src/auth/guard/jwt.guard'
+import { RolesGuard } from 'src/auth/guard/roles.guard'
+import { Roles } from 'src/auth/decorator/roles.decorator'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UpdatePasswordDto } from './dto/update-password.dto'
-import { JwtGuard } from 'src/auth/guard/jwt.guard'
-import { RolesGuard } from 'src/auth/guard/roles.guard'
-import { Roles } from 'src/auth/decorator/roles.decorator'
 
 @UseGuards(JwtGuard, RolesGuard)
 @Controller('users')
@@ -67,5 +67,10 @@ export class UsersController {
   @Put('update-password')
   async updatePassword(@Body() data: UpdatePasswordDto) {
     return await this.usersService.updatePassword(data)
+  }
+
+  @Get(':id/reset-password')
+  async resetPassword(@Param('id') id: number) {
+    return this.usersService.resetPassword(+id);
   }
 }
