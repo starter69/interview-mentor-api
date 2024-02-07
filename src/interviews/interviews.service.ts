@@ -27,10 +27,10 @@ export class InterviewsService {
       include: {
         user: {
           select: {
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     })
   }
 
@@ -40,39 +40,60 @@ export class InterviewsService {
       include: {
         user: {
           select: {
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     })
   }
 
-  async findByUserId(userId:number) {
+  async findByUserId(userId: number) {
     return await this.prisma.interviews.findMany({
       where: {
-        user_id: userId
+        user_id: userId,
       },
       include: {
         user: {
           select: {
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     })
   }
 
   async update(id: number, updateInterviewDto: UpdateInterviewDto) {
     const updatedInterview = await this.prisma.interviews.update({
       where: { id },
-      data: UpdateInterviewDto,
+      data: { name: updateInterviewDto.company_name },
     })
     return updatedInterview
   }
 
   async remove(id: number) {
     await this.prisma.interviews.delete({
-      where: {id},
+      where: { id },
     })
+  }
+
+  async search(query: string) {
+    const result = await this.prisma.interviews.findMany({
+      where: {
+        OR: [
+          {
+            name: { contains: query, mode: 'insensitive' },
+          },
+          {
+            user: {
+              name: { contains: query, mode: 'insensitive' },
+            },
+          },
+        ],
+      },
+      include: {
+        user: true,
+      },
+    })
+    return result
   }
 }
