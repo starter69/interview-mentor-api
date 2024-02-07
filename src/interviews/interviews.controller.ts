@@ -48,19 +48,23 @@ export class InterviewsController {
 
     const thumbnailPath = `${file.destination}/thumbnails/${file.filename.split('.')[0]}.png`
 
-    ffmpeg(filePath)
-      .on('end', function () {
-        console.log('Thumbnail generated successfully!')
-      })
-      .on('error', function (err) {
-        console.error('Error generating thumbnail: ' + err.message)
-      })
-      .screenshots({
-        timestamps: ['0.5%'],
-        filename: `${file.filename.split('.')[0]}.png`,
-        folder: file.destination + '/thumbnails',
-        size: '320x240',
-      })
+    await new Promise<void>((resolve, reject) => {
+      ffmpeg(filePath)
+        .on('end', function () {
+          console.log('Thumbnail generated successfully!')
+          resolve()
+        })
+        .on('error', function (err) {
+          console.error('Error generating thumbnail: ' + err.message)
+          reject(err)
+        })
+        .screenshots({
+          timestamps: ['0.5%'],
+          filename: `${file.filename.split('.')[0]}.png`,
+          folder: file.destination + '/thumbnails',
+          size: '320x240',
+        })
+    })
 
     //@ts-ignore
     createInterviewDto.duration = metadata.format.duration
