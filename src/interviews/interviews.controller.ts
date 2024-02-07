@@ -15,7 +15,8 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { JwtGuard } from 'src/auth/guard/jwt.guard'
 import { multerConfig } from 'src/utils/multer.config'
 import * as ffmpeg from 'fluent-ffmpeg'
-import * as ffprobeStatic from 'ffprobe-static'
+const ffmpegStatic = require('ffmpeg-static')
+const ffprobeStatic = require('ffprobe-static')
 import { InterviewsService } from './interviews.service'
 import { CreateInterviewDto } from './dto/create-interview.dto'
 import { UpdateInterviewDto } from './dto/update-interview.dto'
@@ -31,7 +32,8 @@ export class InterviewsController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createInterviewDto: CreateInterviewDto
   ) {
-    ffmpeg.setFfmpegPath(ffprobeStatic.path)
+    ffmpeg.setFfmpegPath(ffmpegStatic)
+    ffmpeg.setFfprobePath(ffprobeStatic.path)
     const filePath = `${file.destination}/${file.filename}`
 
     const metadata = await new Promise((resolve, reject) => {
@@ -43,9 +45,30 @@ export class InterviewsController {
         }
       })
     })
+
+    const thumbnailPath = `${file.destination}/thumbnails/${file.filename.split('.')[0]}.png`
+
+    ffmpeg(filePath)
+      .on('end', function () {
+        console.log('Thumbnail generated successfully!')
+      })
+      .on('error', function (err) {
+        console.error('Error generating thumbnail: ' + err.message)
+      })
+      .screenshots({
+        timestamps: ['0.5%'],
+        filename: `${file.filename.split('.')[0]}.png`,
+        folder: file.destination + '/thumbnails',
+        size: '320x240',
+      })
+
     //@ts-ignore
     createInterviewDto.duration = metadata.format.duration
-    await this.interviewService.createInterview(createInterviewDto, file.path)
+    await this.interviewService.createInterview(
+      createInterviewDto,
+      file.path,
+      thumbnailPath.substring(2)
+    )
   }
 
   @Get('search')
