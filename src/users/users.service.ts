@@ -5,6 +5,7 @@ import * as argon from 'argon2'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UpdatePasswordDto } from './dto/update-password.dto'
+import { ResetPasswordDto } from './dto/reset-password.dto'
 
 @Injectable()
 export class UsersService {
@@ -40,11 +41,19 @@ export class UsersService {
           },
         },
       },
-      orderBy: {
-        team: {
-          name: 'asc'
-        }
-      }
+      orderBy: [
+        {
+          team: {
+            name: 'asc'
+          },
+        },
+        {
+          role: 'asc',
+        },
+        {
+          name: 'asc',
+        },
+      ]
     })
   }
 
@@ -57,7 +66,6 @@ export class UsersService {
       where: { id },
       data: {
         name: updateUserDto.name,
-        password: await argon.hash(updateUserDto.password),
         team_id: updateUserDto.team_id > 0 ? updateUserDto.team_id : null,
         role:
           updateUserDto.role === 'ADMIN'
@@ -90,5 +98,14 @@ export class UsersService {
     else {
       throw new BadRequestException('Current password is incorrect.')
     }
+  }
+
+  async resetPassword(id: number) {
+    await this.prisma.users.update({
+      where: { id },
+      data: {
+        password: await argon.hash('12345678')
+      }
+    })
   }
 }
