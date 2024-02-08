@@ -33,6 +33,9 @@ export class InterviewsService {
           },
         },
       },
+      orderBy: {
+        date: 'desc',
+      },
     })
   }
 
@@ -60,6 +63,9 @@ export class InterviewsService {
             name: true,
           },
         },
+      },
+      orderBy: {
+        date: 'desc',
       },
     })
   }
