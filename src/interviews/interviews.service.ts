@@ -36,7 +36,7 @@ export class InterviewsService {
     // const username = user.name.charAt(0).toUpperCase() + user.name.slice(1)
 
     const notificationMessage = JSON.stringify({
-      text: `Interviewee: @${user.name}\nCompany: ${createInterviewDto.name}\nDuration: ${convertSecondsToMS(Number(createInterviewDto.duration))}\nInterview: ${process.env.API_URL}/interviews/${interview.id}/detail :tada:`,
+      text: `@${user.name} uploaded a new interview (${convertSecondsToMS(Number(createInterviewDto.duration))})\nCompany: ${createInterviewDto.name}\nURL: ${process.env.API_URL}/interviews/${interview.id}/detail`,
     })
 
     const options = {
