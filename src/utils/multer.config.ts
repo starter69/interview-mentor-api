@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { diskStorage } from 'multer'
 import { extname } from 'path'
-import { getDate } from './getDate'
+import { getDateTime } from './getDateTime'
 
 export const multerConfig = {
   storage: diskStorage({
@@ -9,7 +9,7 @@ export const multerConfig = {
     filename: (req, file, cb) => {
       // @ts-ignore
       const username = req.user.name
-      const date = getDate()
+      const date = getDateTime()
       return cb(
         null,
         `${username}_${req.body.name}_${date}${extname(file.originalname)}`
