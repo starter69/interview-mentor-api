@@ -4,6 +4,7 @@ import { CreateInterviewDto } from './dto/create-interview.dto'
 import { UpdateInterviewDto } from './dto/update-interview.dto'
 import axios from 'axios'
 import * as https from 'https'
+import { convertSecondsToMS } from 'src/utils/convertSecondsToMS'
 
 @Injectable()
 export class InterviewsService {
@@ -35,7 +36,7 @@ export class InterviewsService {
     // const username = user.name.charAt(0).toUpperCase() + user.name.slice(1)
 
     const notificationMessage = JSON.stringify({
-      text: `@${user.name} uploaded an interview with ${createInterviewDto.name} (${Number(createInterviewDto.duration)}s). please visit http://192.168.101.57/interviews/${interview.id}/detail :tada:`,
+      text: `@${user.name} uploaded an interview with ${createInterviewDto.name} (${convertSecondsToMS(Number(createInterviewDto.duration))}). please visit http://192.168.101.57/interviews/${interview.id}/detail :tada:`,
     })
 
     const options = {
