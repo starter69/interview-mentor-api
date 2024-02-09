@@ -36,16 +36,15 @@ export class InterviewsService {
     // const username = user.name.charAt(0).toUpperCase() + user.name.slice(1)
 
     const notificationMessage = JSON.stringify({
-      text: `@${user.name} uploaded an interview with ${createInterviewDto.name} (${convertSecondsToMS(Number(createInterviewDto.duration))}). please visit http://192.168.101.57/interviews/${interview.id}/detail :tada:`,
+      text: `Interviewee: @${user.name}\nCompany: ${createInterviewDto.name}\nDuration: ${convertSecondsToMS(Number(createInterviewDto.duration))}\nInterview: ${process.env.API_URL}/interviews/${interview.id}/detail :tada:`,
     })
 
     const options = {
-      url: 'https://team.jh.local/hooks/keya3ct1cfr9meamansbxkwabh',
+      url: process.env.MATTERMOST_CHANNEL,
 
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer efnm4zd66fyn7qtyinrpe3ke3r',
       },
       data: notificationMessage,
       httpsAgent: agent,
