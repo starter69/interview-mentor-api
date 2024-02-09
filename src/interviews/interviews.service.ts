@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateInterviewDto } from './dto/create-interview.dto'
 import { UpdateInterviewDto } from './dto/update-interview.dto'
+import axios from 'axios'
+import * as https from 'https'
 
 @Injectable()
 export class InterviewsService {
@@ -12,7 +14,7 @@ export class InterviewsService {
     location: string,
     thumbnail_location: string
   ) {
-    return this.prisma.interviews.create({
+    const interview = await this.prisma.interviews.create({
       data: {
         user_id: Number(createInterviewDto.user_id),
         name: createInterviewDto.name,
@@ -22,6 +24,35 @@ export class InterviewsService {
         thumbnail_path: thumbnail_location,
       },
     })
+    const agent = new https.Agent({
+      rejectUnauthorized: false,
+    })
+
+    const user = await this.prisma.users.findUnique({
+      where: { id: Number(createInterviewDto.user_id) },
+    })
+
+    // const username = user.name.charAt(0).toUpperCase() + user.name.slice(1)
+
+    const notificationMessage = JSON.stringify({
+      text: `@${user.name} uploaded an interview with ${createInterviewDto.name} (${Number(createInterviewDto.duration)}s). please visit http://192.168.101.57/interviews/${interview.id}/detail :tada:`,
+    })
+
+    const options = {
+      url: 'https://team.jh.local/hooks/keya3ct1cfr9meamansbxkwabh',
+
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer efnm4zd66fyn7qtyinrpe3ke3r',
+      },
+      data: notificationMessage,
+      httpsAgent: agent,
+    }
+
+    await axios.request(options)
+
+    return interview
   }
 
   findAll() {
