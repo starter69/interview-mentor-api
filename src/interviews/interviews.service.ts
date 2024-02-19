@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateInterviewDto } from './dto/create-interview.dto'
 import { UpdateInterviewDto } from './dto/update-interview.dto'
+import axios from 'axios'
+import * as https from 'https'
+import { convertSecondsToMS } from 'src/utils/convertSecondsToMS'
 
 @Injectable()
 export class InterviewsService {
@@ -12,7 +15,7 @@ export class InterviewsService {
     location: string,
     thumbnail_location: string
   ) {
-    return this.prisma.interviews.create({
+    const interview = await this.prisma.interviews.create({
       data: {
         user_id: Number(createInterviewDto.user_id),
         name: createInterviewDto.name,
@@ -22,6 +25,34 @@ export class InterviewsService {
         thumbnail_path: thumbnail_location,
       },
     })
+    const agent = new https.Agent({
+      rejectUnauthorized: false,
+    })
+
+    const user = await this.prisma.users.findUnique({
+      where: { id: Number(createInterviewDto.user_id) },
+    })
+
+    // const username = user.name.charAt(0).toUpperCase() + user.name.slice(1)
+
+    const notificationMessage = JSON.stringify({
+      text: `@${user.name} uploaded a new interview (${convertSecondsToMS(Number(createInterviewDto.duration))})\nCompany: ${createInterviewDto.name}\nURL: ${process.env.API_URL}/interviews/${interview.id}/detail`,
+    })
+
+    const options = {
+      url: process.env.MATTERMOST_CHANNEL,
+
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: notificationMessage,
+      httpsAgent: agent,
+    }
+
+    await axios.request(options)
+
+    return interview
   }
 
   findAll() {
